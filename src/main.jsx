@@ -270,10 +270,17 @@ function buildPostText(idea, tool) {
 function getInitialPage() {
   const hash = window.location.hash;
   const path = window.location.pathname;
+  if (isGitHubPages() && (hash.startsWith("#/admin") || path.endsWith("/admin") || path.includes("/admin/"))) {
+    return "admin-unavailable";
+  }
   if (hash.startsWith("#/admin") || path.endsWith("/admin") || path.includes("/admin/")) {
     return "products";
   }
   return "lp";
+}
+
+function isGitHubPages() {
+  return window.location.hostname.endsWith("github.io");
 }
 
 function App() {
@@ -327,10 +334,18 @@ function App() {
   const selectedTool = getTool(data.tools, selectedIdea.toolId);
   const selectedResearch = getResearch(data.research, selectedIdea.researchId);
 
+  if (page === "admin-unavailable") {
+    return (
+      <div className="app">
+        <AdminUnavailable />
+      </div>
+    );
+  }
+
   if (page === "lp") {
     return (
       <div className="app">
-        <LandingPage tools={data.tools} onAdmin={() => navigate("products")} />
+        <LandingPage tools={data.tools} onAdmin={() => navigate("products")} showAdminLink={!isGitHubPages()} />
       </div>
     );
   }
@@ -367,7 +382,7 @@ function App() {
         {page === "calendar" && <CalendarPage data={data} persist={persist} />}
         {page === "metrics" && <MetricsPage data={data} upsert={upsert} remove={remove} />}
         {page === "analysis" && <AnalysisPage data={data} upsert={upsert} />}
-        {page === "lp" && <LandingPage tools={data.tools} onAdmin={() => navigate("products")} />}
+        {page === "lp" && <LandingPage tools={data.tools} onAdmin={() => navigate("products")} showAdminLink={!isGitHubPages()} />}
       </main>
 
       <footer className="app-footer">localStorage保存。完全自動投稿なし、人間が確認してから投稿する運用前提です。</footer>
@@ -713,7 +728,26 @@ function AnalysisPage({ data, upsert }) {
   );
 }
 
-function LandingPage({ tools, onAdmin }) {
+function AdminUnavailable() {
+  const topHref = isGitHubPages() ? "/diynavi/" : "/";
+
+  return (
+    <section className="lp">
+      <AffiliateNotice />
+      <div className="panel unavailable-panel">
+        <p className="kicker">Private Area</p>
+        <h1>管理画面は公開されていません</h1>
+        <p>公開ページでは工具リストLPのみ表示しています。</p>
+        <a className="primary link-button" href={topHref}>
+          トップページへ戻る
+          <ChevronRight size={18} />
+        </a>
+      </div>
+    </section>
+  );
+}
+
+function LandingPage({ tools, onAdmin, showAdminLink }) {
   const [filter, setFilter] = useState("all");
   const visible = filter === "all" ? tools : tools.filter((tool) => tool.category === filter);
 
@@ -734,11 +768,13 @@ function LandingPage({ tools, onAdmin }) {
         {visible.map((tool) => <ToolCard key={tool.id} tool={tool} />)}
       </div>
       <AffiliateNotice />
-      <div className="lp-admin-bar">
-        <button className="admin-link" onClick={onAdmin}>
-          管理者用
-        </button>
-      </div>
+      {showAdminLink && (
+        <div className="lp-admin-bar">
+          <button className="admin-link" onClick={onAdmin}>
+            管理者用
+          </button>
+        </div>
+      )}
     </section>
   );
 }

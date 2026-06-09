@@ -451,6 +451,24 @@ pre {
   border-radius: 8px;
 }
 
+.unavailable-panel {
+  min-height: 260px;
+  display: grid;
+  align-content: center;
+  gap: 12px;
+}
+
+.unavailable-panel h1 {
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.unavailable-panel p:not(.kicker) {
+  color: #d0d0d0;
+  line-height: 1.6;
+}
+
 .lp-hero p:last-child {
   color: #d7d7d7;
   font-weight: 800;
