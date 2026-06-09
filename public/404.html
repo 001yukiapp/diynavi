@@ -8,9 +8,15 @@
       (function () {
         var path = window.location.pathname;
         var segments = path.split("/").filter(Boolean);
-        var isProjectPage = window.location.hostname.endsWith("github.io") && segments.length > 1;
-        var base = isProjectPage ? "/" + segments[0] + "/" : "/";
+        var isGitHubPages = window.location.hostname.endsWith("github.io");
+        var isProjectPage = isGitHubPages && segments.length > 1;
+        var base = isProjectPage ? "/" + segments[0] + "/" : "/diynavi/";
         var route = isProjectPage ? "/" + segments.slice(1).join("/") : path;
+
+        if (isGitHubPages && (route === "/admin" || route.indexOf("/admin/") === 0)) {
+          window.location.replace("/diynavi/");
+          return;
+        }
 
         if (!route || route === "/") {
           route = "/";

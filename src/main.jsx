@@ -23,6 +23,7 @@ import {
 import "./styles.css";
 
 const STORAGE_KEY = "car-diy-affiliate-ops-v1";
+const PRODUCTION_BASE_PATH = "/diynavi/";
 
 const toolCategories = [
   { key: "must", label: "まず買うべき工具" },
@@ -271,7 +272,8 @@ function getInitialPage() {
   const hash = window.location.hash;
   const path = window.location.pathname;
   if (isGitHubPages() && (hash.startsWith("#/admin") || path.endsWith("/admin") || path.includes("/admin/"))) {
-    return "admin-unavailable";
+    window.location.replace(PRODUCTION_BASE_PATH);
+    return "lp";
   }
   if (hash.startsWith("#/admin") || path.endsWith("/admin") || path.includes("/admin/")) {
     return "products";
@@ -333,14 +335,6 @@ function App() {
   const selectedIdea = getIdea(data.ideas, selectedIdeaId);
   const selectedTool = getTool(data.tools, selectedIdea.toolId);
   const selectedResearch = getResearch(data.research, selectedIdea.researchId);
-
-  if (page === "admin-unavailable") {
-    return (
-      <div className="app">
-        <AdminUnavailable />
-      </div>
-    );
-  }
 
   if (page === "lp") {
     return (
@@ -723,25 +717,6 @@ function AnalysisPage({ data, upsert }) {
           <ClipboardCopy size={17} />
           伸びた型を別工具に複製
         </button>
-      </div>
-    </section>
-  );
-}
-
-function AdminUnavailable() {
-  const topHref = isGitHubPages() ? "/diynavi/" : "/";
-
-  return (
-    <section className="lp">
-      <AffiliateNotice />
-      <div className="panel unavailable-panel">
-        <p className="kicker">Private Area</p>
-        <h1>管理画面は公開されていません</h1>
-        <p>公開ページでは工具リストLPのみ表示しています。</p>
-        <a className="primary link-button" href={topHref}>
-          トップページへ戻る
-          <ChevronRight size={18} />
-        </a>
       </div>
     </section>
   );
