@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>車DIY工具ナビ</title>
+    <script>
+      (function () {
+        var path = window.location.pathname;
+        var segments = path.split("/").filter(Boolean);
+        var isProjectPage = window.location.hostname.endsWith("github.io") && segments.length > 1;
+        var base = isProjectPage ? "/" + segments[0] + "/" : "/";
+        var route = isProjectPage ? "/" + segments.slice(1).join("/") : path;
+
+        if (!route || route === "/") {
+          route = "/";
+        }
+
+        window.location.replace(base + "#" + route + window.location.search);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>

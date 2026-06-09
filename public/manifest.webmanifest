@@ -1,0 +1,17 @@
+{
+  "name": "車DIY工具ナビ",
+  "short_name": "工具ナビ",
+  "description": "車いじり初心者が失敗しない工具リスト",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#101010",
+  "theme_color": "#101010",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
